@@ -8,8 +8,11 @@ from .response import OneSignalResponse
 
 def _build_request_kwargs(token: str = None,
                           payload: Dict[str, Any] = None,
-                          params: Dict[str, Any] = None) -> Dict[str, Any]:
-    request_kwargs = {}
+                          params: Dict[str, Any] = None,
+                          timeout: int = 30) -> Dict[str, Any]:
+    request_kwargs = request_kwargs = {
+        "timeout": timeout
+    }
     if token is not None:
         request_kwargs['headers'] = {'Authorization': 'Basic {0}'.format(token)}
     if payload is not None:
@@ -31,9 +34,10 @@ def basic_auth_request(method: str,
                        url: str,
                        token: str = None,
                        payload: Dict[str, Any] = None,
-                       params: Dict[str, Any] = None) -> OneSignalResponse:
+                       params: Dict[str, Any] = None,
+                       timeout=30) -> OneSignalResponse:
     """Make a request using basic authorization."""
-    request_kwargs = _build_request_kwargs(token, payload, params)
+    request_kwargs = _build_request_kwargs(token, payload, params, timeout)
     return _handle_response(httpx.request(method, url, **request_kwargs))
 
 
